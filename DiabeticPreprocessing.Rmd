@@ -1,0 +1,24 @@
+---
+title: "DiabeticPreprocessing"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Importing dataset
+
+```{r}
+diabetic_data <- read.csv("Downloads/dataset_diabetes/diabetic_data.csv", na.strings = c("?"))
+names(which(sapply(diabetic_data, anyNA)))
+```
+```{r echo=FALSE}
+print(paste0("race: ",(sum(is.na(diabetic_data$race))/dim(diabetic_data)[1])*100))
+print(paste0("weight: ",(sum(is.na(diabetic_data$weight))/dim(diabetic_data)[1])*100))
+print(paste0("payer_code: ",(sum(is.na(diabetic_data$payer_code))/dim(diabetic_data)[1])*100))
+print(paste0("medical_specialty: ",(sum(is.na(diabetic_data$medical_specialty))/dim(diabetic_data)[1])*100))
+print(paste0("diag_1: ",(sum(is.na(diabetic_data$diag_1))/dim(diabetic_data)[1])*100))
+print(paste0("diag_2: ",(sum(is.na(diabetic_data$diag_2))/dim(diabetic_data)[1])*100))
+print(paste0("diag_3: ",(sum(is.na(diabetic_data$diag_3))/dim(diabetic_data)[1])*100))
+```

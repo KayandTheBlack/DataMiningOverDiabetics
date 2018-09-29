@@ -9,10 +9,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Importing dataset
 
+We import the dataset and see which variables have missing values
 ```{r}
 diabetic_data <- read.csv("Downloads/dataset_diabetes/diabetic_data.csv", na.strings = c("?"))
 names(which(sapply(diabetic_data, anyNA)))
 ```
+First we want to see the % of missings that each variable has
 ```{r echo=FALSE}
 print(paste0("race: ",(sum(is.na(diabetic_data$race))/dim(diabetic_data)[1])*100))
 print(paste0("weight: ",(sum(is.na(diabetic_data$weight))/dim(diabetic_data)[1])*100))
@@ -22,3 +24,39 @@ print(paste0("diag_1: ",(sum(is.na(diabetic_data$diag_1))/dim(diabetic_data)[1])
 print(paste0("diag_2: ",(sum(is.na(diabetic_data$diag_2))/dim(diabetic_data)[1])*100))
 print(paste0("diag_3: ",(sum(is.na(diabetic_data$diag_3))/dim(diabetic_data)[1])*100))
 ```
+The first decision is to work only with individuals whose weight has been recorded.
+```{r}
+diabetic_data <- diabetic_data[!is.na(diabetic_data$weight), ]
+dim(diabetic_data)[1]
+```
+Our dataset has been significantly reduced, and now we have 3197 observations. And now we look at the missing values once again
+```{r}
+names(which(sapply(diabetic_data, anyNA)))
+print(paste0("race: ",(sum(is.na(diabetic_data$race))/dim(diabetic_data)[1])*100))
+print(paste0("payer_code: ",(sum(is.na(diabetic_data$payer_code))/dim(diabetic_data)[1])*100))
+print(paste0("medical_specialty: ",(sum(is.na(diabetic_data$medical_specialty))/dim(diabetic_data)[1])*100))
+print(paste0("diag_2: ",(sum(is.na(diabetic_data$diag_2))/dim(diabetic_data)[1])*100))
+print(paste0("diag_3: ",(sum(is.na(diabetic_data$diag_3))/dim(diabetic_data)[1])*100))
+```
+Our next step is to input missing values, and since our variables are all categorical, we will create a new factor named <var>_unknown for each one of the variables, and substitute the missing values by it.
+```{r}
+diabetic_data$race <- factor(diabetic_data$race, levels= c(levels(diabetic_data$race),"race_unknown"))
+diabetic_data$race[is.na(diabetic_data$race)] <- "race_unknown"
+
+diabetic_data$payer_code <- factor(diabetic_data$payer_code, levels= c(levels(diabetic_data$payer_code),"payer_code_unknown"))
+diabetic_data$payer_code[is.na(diabetic_data$payer_code)] <- "payer_code_unknown"
+
+diabetic_data$medical_specialty <- factor(diabetic_data$medical_specialty, levels= c(levels(diabetic_data$medical_specialty),"medical_specialty_unknown"))
+diabetic_data$medical_specialty[is.na(diabetic_data$medical_specialty)] <- "medical_specialty_unknown"
+
+diabetic_data$diag_2 <- factor(diabetic_data$diag_2, levels= c(levels(diabetic_data$diag_2),"diag_2_unknown"))
+diabetic_data$diag_2[is.na(diabetic_data$diag_2)] <- "diag_2_unknown"
+
+diabetic_data$diag_3 <- factor(diabetic_data$diag_3, levels= c(levels(diabetic_data$diag_3),"diag_3_unknown"))
+diabetic_data$diag_3[is.na(diabetic_data$diag_3)] <- "diag_3_unknown"
+```
+Now we have no NAs, and we want to see the levels of our factors
+```{r}
+summary(diabetic_data)
+```
+

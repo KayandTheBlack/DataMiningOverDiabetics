@@ -1,6 +1,6 @@
 ## Changing the Diagnotics colummns
 
-We want to change the values of the three diagnotics collumns from medical codes to their group name.
+We want to change the values of the three diagnotics columns from medical codes to their group name.
 
 First we will need to transform these values from factors to characters (strings):
 ```{r}

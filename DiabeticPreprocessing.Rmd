@@ -72,8 +72,176 @@ summary(diabetic_data)
 We notice several things from this last summary. Firstly, we have too many medicines, most of them apparently uninformative for the subset of data we are dealing with. We also have too many factors over diagnostics, and after a look at the meaning of those factors we notice they are not even ordinal and would not be too useful in their current form (too disperse and the factors' semantical relationship is not expressed).
 
 From these observations, we decide that the next steps for modelling our data are the following:
+  - Collapse the drugs variables, droping most of the unsignificant ones. Our criteria has been to maintain insuline and metformine as they are (since they are both important for diabetes and well distributed over the factors) and to group all of the rest into a new variable 'other_meds', which will be binary, with value 'no_more_meds' if all of the other drugs have 'No' value and 'takes_more_meds' otherwise.
   - Reduce factors over diagnostics, grouping them semantically. That is, instead of using specific diagnostics, we will map them to the general area they are related to, such as circulatory, respiratory etc. For that, we already have a table made by experts of the field.
-  - Collapse the drugs variables, droping most of the unsignificant ones. Our criteria has been to maintain insuline and metformine as they are (since they are both important for diabetes and well distributed over the factors) and to group all of the rest into a new variable 'other_meds', which will be binary, with value 'No' if all of the other drugs have 'No' value and 'Yes' otherwise.
   - Rename the variables and factors if they are too long, for the sake of having a cleaner look.
 
+We will first work on collapsing the drugs. To recapitulate, we have decided to name this new variable 'other_meds', which will be a binary variable with factors:'takes_more_meds' and 'no_more_meds' (which will help distinguish it from other qualitative vars when we do the PCA).
 
+```{r}
+diabetic_data$other_meds <- as.factor(with(diabetic_data, ifelse(repaglinide=='No' & nateglinide == 'No'& chlorpropamide == 'No'& glimepiride == 'No'& acetohexamide == 'No'& glipizide == 'No'& glyburide == 'No'& tolbutamide == 'No'& pioglitazone == 'No'& rosiglitazone == 'No'& acarbose == 'No'& miglitol == 'No'& troglitazone == 'No'& tolazamide == 'No'& examide == 'No' & citoglipton == 'No', 'no_more_meds', 'takes_more_meds')))
+
+table(diabetic_data$other_meds)
+
+```
+
+As we see above, this new variable is quite well balanced (which implies it will probably be informative as well). By reducing the number of variables (which were imbalanced between their factors), we hope to reduce the execution time of our algorithms while keeping a (now not-so-informative as before) record over the rest of medicines which appear to be more punctual than metformin and insuline.
+Having checked that, we now drop the compiled medicine variables from the dataset. We'll also drop the variable max_glu_serum, since we have observed it has no descriptive capabilities (all values are 'None').
+
+```{r echo=FALSE}
+cat("Previous data:")
+colnames(diabetic_data)
+diabetic_data_1 <- diabetic_data[, -which(names(diabetic_data) %in% c("repaglinide","nateglinide","chlorpropamide","glimepiride","acetohexamide","glipizide","glyburide","tolbutamide","pioglitazone","rosiglitazone","acarbose","miglitol","troglitazone","tolazamide","examide","citoglipton","glyburide.metformin","glipizide.metformin","glimepiride.pioglitazone","metformin.rosiglitazone","metformin.pioglitazone", "max_glu_serum"))]
+
+cat("\nNew data:\n")
+colnames(diabetic_data_1)
+diabetic_data <- diabetic_data_1
+```
+
+We will now reduce the factors, using the table provided by experts:
+
+First we will need to transform these values from factors to characters (strings), to work more easily
+```{r echo=FALSE}
+diabetic_data$diag_1 <- as.character(diabetic_data$diag_1)
+diabetic_data$diag_2 <- as.character(diabetic_data$diag_2)
+diabetic_data$diag_3 <- as.character(diabetic_data$diag_3)
+```
+
+Next, we change these values to their group names following the guidelines provided in the Table 2 of the description PDF.
+
+```{r echo=FALSE}
+#Circulatory
+for (i in 390:459){
+  diabetic_data$diag_1[diabetic_data$diag_1 == as.character(i)] <- "Circulatory"
+  diabetic_data$diag_2[diabetic_data$diag_2 == as.character(i)] <- "Circulatory"
+  diabetic_data$diag_3[diabetic_data$diag_3 == as.character(i)] <- "Circulatory"
+}
+diabetic_data$diag_1[diabetic_data$diag_1 == "785"] <- "Circulatory"
+diabetic_data$diag_2[diabetic_data$diag_2 == "785"] <- "Circulatory"
+diabetic_data$diag_3[diabetic_data$diag_3 == "785"] <- "Circulatory"
+
+#Respiratory
+for (i in 460:519){
+  diabetic_data$diag_1[diabetic_data$diag_1 == as.character(i)] <- "Respiratory"
+  diabetic_data$diag_2[diabetic_data$diag_2 == as.character(i)] <- "Respiratory"
+  diabetic_data$diag_3[diabetic_data$diag_3 == as.character(i)] <- "Respiratory"
+}
+diabetic_data$diag_1[diabetic_data$diag_1 == "786"] <- "Respiratory"
+diabetic_data$diag_2[diabetic_data$diag_2 == "786"] <- "Respiratory"
+diabetic_data$diag_3[diabetic_data$diag_3 == "786"] <- "Respiratory"
+
+#Digestive
+name <- "Digestive"
+for (i in 520:579){
+  diabetic_data$diag_1[diabetic_data$diag_1 == as.character(i)] <- name
+  diabetic_data$diag_2[diabetic_data$diag_2 == as.character(i)] <- name
+  diabetic_data$diag_3[diabetic_data$diag_3 == as.character(i)] <- name
+}
+diabetic_data$diag_1[diabetic_data$diag_1 == "787"] <- name
+diabetic_data$diag_2[diabetic_data$diag_2 == "787"] <- name
+diabetic_data$diag_3[diabetic_data$diag_3 == "787"] <- name
+
+
+#Injury
+name <- "Injury"
+for (i in 800:999){
+  diabetic_data$diag_1[diabetic_data$diag_1 == as.character(i)] <- name
+  diabetic_data$diag_2[diabetic_data$diag_2 == as.character(i)] <- name
+  diabetic_data$diag_3[diabetic_data$diag_3 == as.character(i)] <- name
+}
+
+
+#Musculoskeletal
+name <- "Musculoskeletal"
+for (i in 710:739){
+  diabetic_data$diag_1[diabetic_data$diag_1 == as.character(i)] <- name
+  diabetic_data$diag_2[diabetic_data$diag_2 == as.character(i)] <- name
+  diabetic_data$diag_3[diabetic_data$diag_3 == as.character(i)] <- name
+}
+
+
+
+#Genitourinary
+name <- "Genitourinary"
+for (i in 580:629){
+  diabetic_data$diag_1[diabetic_data$diag_1 == as.character(i)] <- name
+  diabetic_data$diag_2[diabetic_data$diag_2 == as.character(i)] <- name
+  diabetic_data$diag_3[diabetic_data$diag_3 == as.character(i)] <- name
+}
+diabetic_data$diag_1[diabetic_data$diag_1 == "788"] <- name
+diabetic_data$diag_2[diabetic_data$diag_2 == "788"] <- name
+diabetic_data$diag_3[diabetic_data$diag_3 == "788"] <- name
+
+
+#Neoplasms
+name <- "Neoplasms"
+for (i in 140:239){
+  diabetic_data$diag_1[diabetic_data$diag_1 == as.character(i)] <- name
+  diabetic_data$diag_2[diabetic_data$diag_2 == as.character(i)] <- name
+  diabetic_data$diag_3[diabetic_data$diag_3 == as.character(i)] <- name
+}
+
+
+#Diabetes
+name <- "Diabetes"
+diabetic_data$diag_1[diabetic_data$diag_1 >="250." & diabetic_data$diag_1 <= "250.999999999"] <- name
+diabetic_data$diag_2[diabetic_data$diag_2 >="250." & diabetic_data$diag_2 <= "250.999999999"] <- name
+diabetic_data$diag_3[diabetic_data$diag_3 >="250." & diabetic_data$diag_3 <= "250.999999999"] <- name
+diabetic_data$diag_1[diabetic_data$diag_1 =="250"] <- name
+diabetic_data$diag_2[diabetic_data$diag_2 =="250"] <- name
+diabetic_data$diag_3[diabetic_data$diag_3 =="250"] <- name
+
+
+#Other
+name <- "Other"
+diabetic_data$diag_1[diabetic_data$diag_1 != "Circulatory" & diabetic_data$diag_1 != "Respiratory" & diabetic_data$diag_1 != "Digestive" & diabetic_data$diag_1 != "Diabetes" & diabetic_data$diag_1 != "Injury" & diabetic_data$diag_1 != "Musculoskeletal" & diabetic_data$diag_1 != "Genitourinary" & diabetic_data$diag_1 != "Neoplasms"] <- name
+diabetic_data$diag_2[diabetic_data$diag_2 != "Circulatory" & diabetic_data$diag_2 != "Respiratory" & diabetic_data$diag_2 != "Digestive" & diabetic_data$diag_2 != "Diabetes" & diabetic_data$diag_2 != "Injury" & diabetic_data$diag_2 != "Musculoskeletal" & diabetic_data$diag_2 != "Genitourinary" & diabetic_data$diag_2 != "Neoplasms"] <- name
+diabetic_data$diag_3[diabetic_data$diag_3 != "Circulatory" & diabetic_data$diag_3 != "Respiratory" & diabetic_data$diag_3 != "Digestive" & diabetic_data$diag_3 != "Diabetes" & diabetic_data$diag_3 != "Injury" & diabetic_data$diag_3 != "Musculoskeletal" & diabetic_data$diag_3 != "Genitourinary" & diabetic_data$diag_3 != "Neoplasms"] <- name
+
+
+diabetic_data$diag_1 = as.factor(diabetic_data$diag_1)
+diabetic_data$diag_2 = as.factor(diabetic_data$diag_2)
+diabetic_data$diag_3 = as.factor(diabetic_data$diag_3)
+```
+
+Now the transformation over the three variables is done, we will want to see the summary:
+
+```{r}
+
+print(dim(diabetic_data))
+summary(diabetic_data)
+```
+
+We will now reduce the names of our variables for better readibility on analysis such as PCA, with the following mapping
+```{r echo=FALSE}
+keys <- c("admission_type_id", "admission_source_id","discharge_disposition_id",
+"time_in_hospital", "medical_specialty", "number_emergency",
+"number_inpatient", "num_lab_procedures", "num_procedures",
+"num_medications", "number_outpatient","number_diagnoses", "patient_nbr")
+shortened <- c("adm_type_id", "adm_source_id","disch_id",
+"time_in_hpt", "specialty", "n_emerg",
+"n_inp", "n_lab_proc", "n_proc",
+"n_med", "n_outp", "n_diag","patient_n")
+names(shortened) <- keys
+print(data.frame("abbreviated"=shortened))
+
+currCols <- colnames(diabetic_data)
+for (currCol in 1:length(currCols)){
+  colName <- currCols[currCol]
+  if (colName %in% keys){
+    colnames(diabetic_data)[currCol] <- shortened[[colName]]
+  }
+}
+```
+
+Now that the deed is done, we take a final look at our data:
+
+```{r}
+summary(diabetic_data)
+```
+
+And store it already processed, so we don't have to run this code again.
+
+```{r}
+write.csv(diabetic_data, file="processed_data.csv")
+```

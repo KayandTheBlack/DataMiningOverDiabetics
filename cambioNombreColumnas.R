@@ -9,20 +9,31 @@ keys <- c("metformin", "repaglinide", "nateglinide", "chlorpropamide",
 "miglitol", "troglitazone", "tolazamide", "examide",
 "citoglipton", "insulin", "glyburide.metformin", "glipizide.metformin",
 "glimepiride.pioglitazone", "metformin.rosiglitazone",
-"metformin.pioglitazone")
+"metformin.pioglitazone",
+"admission_type_id", "admission_source_id","discharge_disposition_id",
+"time_in_hospital", "medical_specialty", "number_emergency",
+"number_inpatient", "num_lab_procedures", "num_procedures",
+"num_medications", "number_outpatient","number_diagnoses", "patient_nbr")
 
+shortenedMed <- vector(mode="list", length=23)
+shortenedOther <- vector(mode="list", length=(length(keys)-23))
 shortened <- vector(mode="list", length=length(keys))
-names(shortened) <- keys
 
 # Assigning simple names to the 23 medicines
 for (medIndex in 1:9){
-  shortened[[medIndex]] <- paste("med_0", medIndex,sep="")
+  shortenedMed[[medIndex]] <- paste("med_0", medIndex,sep="")
 }
 for (medIndex in 10:23){
-  shortened[[medIndex]] <- paste("med_", medIndex,sep="")
+  shortenedMed[[medIndex]] <- paste("med_", medIndex,sep="")
 }
 # Assigning names to the rest
+shortenedOther <- c("adm_type_id", "adm_source_id","disch_id",
+"time_in_hpt", "specialty", "n_emerg",
+"n_inp", "n_lab_proc", "n_proc",
+"n_med", "n_outp", "n_diag","patient_n")
 
+shortened <- c(shortenedMed, shortenedOther)
+names(shortened) <- keys
 
 # Substituting the names in the original data
 currCols <- colnames(diabetic_data)

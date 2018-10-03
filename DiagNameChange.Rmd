@@ -1,0 +1,103 @@
+## Changing the Diagnotics colummns
+
+We want to change the values of the three diagnotics collumns from medical codes to their group name.
+
+First we will need to transform these values from factors to characters (strings):
+```{r}
+diabetic_data$diag_1 <- as.character(diabetic_data$diag_1)
+diabetic_data$diag_2 <- as.character(diabetic_data$diag_2)
+diabetic_data$diag_3 <- as.character(diabetic_data$diag_3)
+```
+
+Next, we change these values to their group names following the guidelines provided in the Table 2 of the description PDF.
+
+```{r}
+#Circulatory
+for (i in 390:459){
+  diabetic_data$diag_1[diabetic_data$diag_1 == as.character(i)] <- "Circulatory"
+  diabetic_data$diag_2[diabetic_data$diag_2 == as.character(i)] <- "Circulatory"
+  diabetic_data$diag_3[diabetic_data$diag_3 == as.character(i)] <- "Circulatory"
+}
+diabetic_data$diag_1[diabetic_data$diag_1 == "785"] <- "Circulatory"
+diabetic_data$diag_2[diabetic_data$diag_2 == "785"] <- "Circulatory"
+diabetic_data$diag_3[diabetic_data$diag_3 == "785"] <- "Circulatory"
+
+#Respiratory
+for (i in 460:519){
+  diabetic_data$diag_1[diabetic_data$diag_1 == as.character(i)] <- "Respiratory"
+  diabetic_data$diag_2[diabetic_data$diag_2 == as.character(i)] <- "Respiratory"
+  diabetic_data$diag_3[diabetic_data$diag_3 == as.character(i)] <- "Respiratory"
+}
+diabetic_data$diag_1[diabetic_data$diag_1 == "786"] <- "Respiratory"
+diabetic_data$diag_2[diabetic_data$diag_2 == "786"] <- "Respiratory"
+diabetic_data$diag_3[diabetic_data$diag_3 == "786"] <- "Respiratory"
+
+#Digestive
+name <- "Digestive"
+for (i in 520:579){
+  diabetic_data$diag_1[diabetic_data$diag_1 == as.character(i)] <- name
+  diabetic_data$diag_2[diabetic_data$diag_2 == as.character(i)] <- name
+  diabetic_data$diag_3[diabetic_data$diag_3 == as.character(i)] <- name
+}
+diabetic_data$diag_1[diabetic_data$diag_1 == "787"] <- name
+diabetic_data$diag_2[diabetic_data$diag_2 == "787"] <- name
+diabetic_data$diag_3[diabetic_data$diag_3 == "787"] <- name
+
+
+#Injury
+name <- "Injury"
+for (i in 800:999){
+  diabetic_data$diag_1[diabetic_data$diag_1 == as.character(i)] <- name
+  diabetic_data$diag_2[diabetic_data$diag_2 == as.character(i)] <- name
+  diabetic_data$diag_3[diabetic_data$diag_3 == as.character(i)] <- name
+}
+
+
+#Musculoskeletal
+name <- "Musculoskeletal"
+for (i in 710:739){
+  diabetic_data$diag_1[diabetic_data$diag_1 == as.character(i)] <- name
+  diabetic_data$diag_2[diabetic_data$diag_2 == as.character(i)] <- name
+  diabetic_data$diag_3[diabetic_data$diag_3 == as.character(i)] <- name
+}
+
+
+
+#Genitourinary
+name <- "Genitourinary"
+for (i in 580:629){
+  diabetic_data$diag_1[diabetic_data$diag_1 == as.character(i)] <- name
+  diabetic_data$diag_2[diabetic_data$diag_2 == as.character(i)] <- name
+  diabetic_data$diag_3[diabetic_data$diag_3 == as.character(i)] <- name
+}
+diabetic_data$diag_1[diabetic_data$diag_1 == "788"] <- name
+diabetic_data$diag_2[diabetic_data$diag_2 == "788"] <- name
+diabetic_data$diag_3[diabetic_data$diag_3 == "788"] <- name
+
+
+#Neoplasms
+name <- "Neoplasms"
+for (i in 140:239){
+  diabetic_data$diag_1[diabetic_data$diag_1 == as.character(i)] <- name
+  diabetic_data$diag_2[diabetic_data$diag_2 == as.character(i)] <- name
+  diabetic_data$diag_3[diabetic_data$diag_3 == as.character(i)] <- name
+}
+
+
+#Diabetes
+name <- "Diabetes"
+diabetic_data$diag_1[diabetic_data$diag_1 >="250." & diabetic_data$diag_1 <= "250.999999999"] <- name
+diabetic_data$diag_2[diabetic_data$diag_2 >="250." & diabetic_data$diag_2 <= "250.999999999"] <- name
+diabetic_data$diag_3[diabetic_data$diag_3 >="250." & diabetic_data$diag_3 <= "250.999999999"] <- name
+diabetic_data$diag_1[diabetic_data$diag_1 =="250"] <- name
+diabetic_data$diag_2[diabetic_data$diag_2 =="250"] <- name
+diabetic_data$diag_3[diabetic_data$diag_3 =="250"] <- name
+
+
+#Other
+name <- "Other"
+diabetic_data$diag_1[diabetic_data$diag_1 != "Circulatory" & diabetic_data$diag_1 != "Respiratory" & diabetic_data$diag_1 != "Digestive" & diabetic_data$diag_1 != "Diabetes" & diabetic_data$diag_1 != "Injury" & diabetic_data$diag_1 != "Musculoskeletal" & diabetic_data$diag_1 != "Genitourinary" & diabetic_data$diag_1 != "Neoplasms"] <- name
+diabetic_data$diag_2[diabetic_data$diag_2 != "Circulatory" & diabetic_data$diag_2 != "Respiratory" & diabetic_data$diag_2 != "Digestive" & diabetic_data$diag_2 != "Diabetes" & diabetic_data$diag_2 != "Injury" & diabetic_data$diag_2 != "Musculoskeletal" & diabetic_data$diag_2 != "Genitourinary" & diabetic_data$diag_2 != "Neoplasms"] <- name
+diabetic_data$diag_3[diabetic_data$diag_3 != "Circulatory" & diabetic_data$diag_3 != "Respiratory" & diabetic_data$diag_3 != "Digestive" & diabetic_data$diag_3 != "Diabetes" & diabetic_data$diag_3 != "Injury" & diabetic_data$diag_3 != "Musculoskeletal" & diabetic_data$diag_3 != "Genitourinary" & diabetic_data$diag_3 != "Neoplasms"] <- name
+
+```

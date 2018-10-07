@@ -69,6 +69,13 @@ Now we have no NAs (or at least, they have been reskinned). We want to see the l
 summary(diabetic_data)
 ```
 
+We notice that some variables have not been imported correctly as factors(admission_source_id, admission_type_id, discharge_disposition_id). We fix it.
+```{r}
+diabetic_data$admission_source_id = as.factor(diabetic_data$admission_source_id)
+diabetic_data$admission_type_id = as.factor(diabetic_data$admission_type_id)
+diabetic_data$discharge_disposition_id = as.factor(diabetic_data$discharge_disposition_id)
+```
+
 We notice several things from this last summary. Firstly, we have too many medicines, most of them apparently uninformative for the subset of data we are dealing with. We also have too many factors over diagnostics, and after a look at the meaning of those factors we notice they are not even ordinal and would not be too useful in their current form (too disperse and the factors' semantical relationship is not expressed).
 
 From these observations, we decide that the next steps for modelling our data are the following:
@@ -98,7 +105,11 @@ colnames(diabetic_data_1)
 diabetic_data <- diabetic_data_1
 ```
 
-We will now reduce the factors, using the table provided by experts:
+We will now reduce the factors, using the table provided by experts. We first look over the factor distribution of diag_1
+```{r}
+plot(diabetic_data$diag_1)
+```
+As we can see, we have many factors and not much we can interpret from them.
 
 First we will need to transform these values from factors to characters (strings), to work more easily
 ```{r echo=FALSE}
@@ -202,6 +213,11 @@ diabetic_data$diag_3[diabetic_data$diag_3 != "Circulatory" & diabetic_data$diag_
 diabetic_data$diag_1 = as.factor(diabetic_data$diag_1)
 diabetic_data$diag_2 = as.factor(diabetic_data$diag_2)
 diabetic_data$diag_3 = as.factor(diabetic_data$diag_3)
+```
+
+The new distribution it follows, as we can see below, is quite more informative:
+```{r}
+plot(diabetic_data$diag_1)
 ```
 
 Now the transformation over the three variables is done, we will want to see the summary:

@@ -53,8 +53,8 @@ diabetic_data$race[is.na(diabetic_data$race)] <- "race_unknown"
 diabetic_data$payer_code <- factor(diabetic_data$payer_code, levels= c(levels(diabetic_data$payer_code),"payer_code_unknown"))
 diabetic_data$payer_code[is.na(diabetic_data$payer_code)] <- "payer_code_unknown"
 
-diabetic_data$medical_specialty <- factor(diabetic_data$medical_specialty, levels= c(levels(diabetic_data$medical_specialty),"medical_specialty_unknown"))
-diabetic_data$medical_specialty[is.na(diabetic_data$medical_specialty)] <- "medical_specialty_unknown"
+diabetic_data$medical_specialty <- factor(diabetic_data$medical_specialty, levels= c(levels(diabetic_data$medical_specialty),"specialty_unknown"))
+diabetic_data$medical_specialty[is.na(diabetic_data$medical_specialty)] <- "specialty_unknown"
 
 diabetic_data$diag_2 <- factor(diabetic_data$diag_2, levels= c(levels(diabetic_data$diag_2),"diag_2_unknown"))
 diabetic_data$diag_2[is.na(diabetic_data$diag_2)] <- "diag_2_unknown"

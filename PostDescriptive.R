@@ -28,12 +28,13 @@ for(k in 1:K){
     
     #Save pie plot image
     png(filename=paste(names(diabetic_data)[k],"_Pie",".png",sep=""), width=800, height=800)
-    pie(frecs, cex=0.6, main=paste("Pie of", names(diabetic_data)[k]))
+    pie(frecs, cex=1.2, main=paste("Pie of", names(diabetic_data)[k]))
     dev.off()
     
     #Save bar plot image
     png(filename=paste(names(diabetic_data)[k],"_Barplot",".png",sep=""), width=800, height=800)
-    barplot(frecs, las=3, cex.names=0.7, main=paste("Barplot of", names(diabetic_data)[k]), col=listOfColors)
+    par(mar=c(13,4,4,1)+.1)
+    barplot(frecs, las=3, cex.axis=1.2,cex.names=1.2, main=paste("Barplot of", names(diabetic_data)[k]), col=listOfColors)
     dev.off()
     
     print(frecs)
@@ -47,12 +48,12 @@ for(k in 1:K){
     
     # Save histogram image
     png(filename=paste(names(diabetic_data)[k],"_Histogram",".png",sep=""), width=800, height=800)
-    hist(diabetic_data[,k], main=paste("Histogram of", names(diabetic_data)[k]))
+    hist(diabetic_data[,k], main=paste("Histogram of", names(diabetic_data)[k]), cex=1.2)
     dev.off()
     
     # Save boxplot image
     png(filename=paste(names(diabetic_data)[k],"_Boxplot",".png",sep=""), width=800, height=800)
-    boxplot(diabetic_data[,k], horizontal=TRUE, main=paste("Boxplot of", names(diabetic_data)[k]))
+    boxplot(diabetic_data[,k], horizontal=TRUE, main=paste("Boxplot of", names(diabetic_data)[k]), cex=1.2)
     dev.off()
     
     print(summary(diabetic_data[,k]))

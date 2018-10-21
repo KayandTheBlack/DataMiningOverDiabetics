@@ -57,16 +57,27 @@ pvalk <- matrix(data=0,nrow=nc,ncol=K, dimnames=list(levels(P),names(dades)))
 nameP<-"Class"
 n<-dim(dades)[1]
 
+
+setwd(file.path("./Profiling"))
 for(k in 1:K){
+  dir.create(file.path(names(dades)[k]))
+  setwd(file.path(names(dades)[k]))
   
   if (is.numeric(dades[,k])){ 
     print(paste("Anàlisi per classes de la Variable:", names(dades)[k]))
     
-    boxplot(dades[,k]~P, main=paste("Boxplot of", names(dades)[k], "vs", nameP ), horizontal=TRUE)
+    png(filename=paste(names(diabetic_data)[k],"_Boxplot",".png",sep=""), width=800, height=800)
+    boxplot(dades[,k]~P, main=paste("Boxplot of", names(dades)[k], "vs", nameP ), horizontal=TRUE, cex=1.2)
+    dev.off()
     
+    
+    png(filename=paste(names(diabetic_data)[k],"_Barplot",".png",sep=""), width=800, height=800)
     barplot(tapply(dades[[k]], P, mean),main=paste("Means of", names(dades)[k], "by", nameP ))
+    
     abline(h=mean(dades[[k]]))
     legend(0,mean(dades[[k]]),"global mean",bty="n")
+    dev.off()
+    
     print("Estadístics per groups:")
     for(s in levels(as.factor(P))) {print(summary(dades[P==s,k]))}
     o<-oneway.test(dades[,k]~P)
@@ -95,10 +106,12 @@ for(k in 1:K){
     for(c in 1:length(levels(dades[,k]))){lines(colperc[,c],col=paleta[c]) }
     
     #with legend
+    png(filename=paste(names(diabetic_data)[k],"_pos&neg",".png",sep=""), width=800, height=800)
     plot(marg,type="l",ylim=c(0,1),main=paste("Prop. of pos & neg by",names(dades)[k]))
     paleta<-rainbow(length(levels(dades[,k])))
     for(c in 1:length(levels(dades[,k]))){lines(colperc[,c],col=paleta[c]) }
     legend("topright", levels(dades[,k]), col=paleta, lty=2, cex=0.6)
+    dev.off()
     
     #condicionades a classes
     print(append("Categories=",levels(dades[,k])))
@@ -107,10 +120,12 @@ for(k in 1:K){
     for(c in 1:length(levels(dades[,k]))){lines(rowperc[,c],col=paleta[c]) }
     
     #with legend
+    png(filename=paste(names(diabetic_data)[k],"_pos&negCondClasse",".png",sep=""), width=800, height=800)
     plot(marg,type="n",ylim=c(0,1),main=paste("Prop. of pos & neg by",names(dades)[k]))
     paleta<-rainbow(length(levels(dades[,k])))
     for(c in 1:length(levels(dades[,k]))){lines(rowperc[,c],col=paleta[c]) }
     legend("topright", levels(dades[,k]), col=paleta, lty=2, cex=0.6)
+    dev.off()
     
     #amb variable en eix d'abcisses
     marg <-table(dades[,k])/n
@@ -120,9 +135,11 @@ for(k in 1:K){
     for(c in 1:length(levels(as.factor(P)))){lines(rowperc[c,],col=paleta[c]) }
     
     #with legend
+    png(filename=paste(names(diabetic_data)[k],"_pos&negGirat",".png",sep=""), width=800, height=800)
     plot(marg,type="l",ylim=c(0,1),main=paste("Prop. of pos & neg by",names(dades)[k]))
     for(c in 1:length(levels(as.factor(P)))){lines(rowperc[c,],col=paleta[c])}
     legend("topright", levels(as.factor(P)), col=paleta, lty=2, cex=0.6)
+    dev.off()
     
     #condicionades a columna 
     plot(marg,type="n",ylim=c(0,1),main=paste("Prop. of pos & neg by",names(dades)[k]))
@@ -130,9 +147,11 @@ for(k in 1:K){
     for(c in 1:length(levels(as.factor(P)))){lines(colperc[c,],col=paleta[c]) }
     
     #with legend
+    png(filename=paste(names(diabetic_data)[k],"_pos&negCondColumn",".png",sep=""), width=800, height=800)
     plot(marg,type="n",ylim=c(0,1),main=paste("Prop. of pos & neg by",names(dades)[k]))
     for(c in 1:length(levels(as.factor(P)))){lines(colperc[c,],col=paleta[c])}
     legend("topright", levels(as.factor(P)), col=paleta, lty=2, cex=0.6)
+    dev.off()
     
     table<-table(dades[,k],P)
     print("Cross Table:")
@@ -145,14 +164,18 @@ for(k in 1:K){
     paleta<-rainbow(length(levels(dades[,k])))
     barplot(table(dades[,k], as.factor(P)), beside=FALSE,col=paleta )
     
+    png(filename=paste(names(diabetic_data)[k],"_barplotApilades",".png",sep=""), width=800, height=800)
     barplot(table(dades[,k], as.factor(P)), beside=FALSE,col=paleta )
     legend("topright",levels(as.factor(dades[,k])),pch=1,cex=0.5, col=paleta)
+    dev.off()
     
     #diagrames de barres adosades
     barplot(table(dades[,k], as.factor(P)), beside=TRUE,col=paleta )
     
+    png(filename=paste(names(diabetic_data)[k],"_barplotAdosades",".png",sep=""), width=800, height=800)
     barplot(table(dades[,k], as.factor(P)), beside=TRUE,col=paleta)
     legend("topright",levels(as.factor(dades[,k])),pch=1,cex=0.5, col=paleta)
+    dev.off()
     
     print("Test Chi quadrat: ")
     print(chisq.test(dades[,k], as.factor(P)))
@@ -160,8 +183,9 @@ for(k in 1:K){
     print("valorsTest:")
     print( ValorTestXquali(P,dades[,k]))
   }
+  setwd(file.path(".."))
 }#endfor
-
+setwd(file.path(".."))
 ################ Arreglar pvalues
 
 

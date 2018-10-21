@@ -1,4 +1,4 @@
-base_path <- "C:/Users/danie/Documents/MD/diab/DataMiningOverDiabetics"
+base_path <- "E:/Marc/Cole/Uni/7eQ/MD/DataMiningOverDiabetics"
 setwd(file.path(base_path))
 diabetic_data <- read.csv("processed_data.csv", na.strings = c("?"))
 

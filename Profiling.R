@@ -2,8 +2,7 @@
 # load("d:/karina/docencia/DataMiningEI/Practiques/2CredscoProfiling/credscok_bin")
 
 setwd("E:/Marc/Cole/Uni/7eQ/MD/DataMiningOverDiabetics");
-#dd <- read.csv("processed_data.csv", na.strings = c("?"))
-dd <- diabetic_data
+dd <- read.csv("processed_data.csv", na.strings = c("?"))
 names(dd)
 
 attach(dd)
@@ -11,6 +10,7 @@ attach(dd)
 #Dictamen    <- as.factor(Dictamen)
 #levels(Dictamen) <- c(NA, "positiu","negatiu")
 
+actives<-c(4:11,13:28,30)
 
 #Calcula els valor test de la variable Xnum per totes les modalitats del factor P
 ValorTestXnum <- function(Xnum,P){
@@ -46,7 +46,7 @@ ValorTestXquali <- function(P,Xquali){
 }
 
 
-dades<-dd
+dades<-dd[,actives]
 #dades<-df
 K<-dim(dades)[2]
 par(ask=TRUE)
@@ -58,6 +58,7 @@ nameP<-"Class"
 n<-dim(dades)[1]
 
 for(k in 1:K){
+  
   if (is.numeric(dades[,k])){ 
     print(paste("Anàlisi per classes de la Variable:", names(dades)[k]))
     
@@ -171,9 +172,6 @@ for (c in 1:length(levels(as.factor(P)))) { if(!is.na(levels(as.factor(P))[c])){
 #saving the dataframe in an external file
 #write.table(dd, file = "credscoClean.csv", sep = ";", na = "NA", dec = ".", row.names = FALSE, col.names = TRUE)
 
-#cada numero es la columna
-active<-c(1, 2, 28, 29, 30)
-
 
 #createCPG(dd[,active], Tipo.trabajo)
 
@@ -182,12 +180,22 @@ active<-c(1, 2, 28, 29, 30)
 
 #comparar una variable amb les altres
 
-dades<-dd
+detach(dd)
+detach(dades)
+detach(diabetic_data)
+
+dades<-dd[,actives]
 attach(dades)
-plotConditionalTable(dades[,28:30], readmitted)
+plotConditionalTable(dades[,1:2], readmitted)
+
+
+#cada numero es la columna
+
 
 #fer creixer la finestra de plots
 #control - per fer menor el tipus de lletra en R
-createCPG(dd[,active], as.factor(c1))
+#cambiar els valors d'active per mostrar les diferents variables
+active<-c(24:25)
+createCPG(dades[,active], as.factor(c1))
 
 #falta jugar amb els marges

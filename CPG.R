@@ -44,16 +44,24 @@ plotConditionalTable<-function(data, res)
   layout(mat, widths= rep.int(1, K), heights= rep.int(1,nc))
   
   for (k in 1:K){
+    dir.create(file.path(names(dades)[k]))
+    setwd(file.path(names(dades)[k]))
     Vnum<-data[,k]
     for(niv in levels(response)){
       print(niv)
       s<-subset(Vnum, response==niv)
       if(is.numeric(data[,k]))
-      {  hist(s, main=paste(names(data)[k], niv))
+      {  
+        png(filename=paste(names(data)[k],"_histograma_", niv ,".png",sep=""), width=800, height=800)
+        hist(s, main=paste(names(data)[k], niv))
+        dev.off()
         #evenctually add other summary statistics, like vc
       }else{
-        barplot(table(s), las=3, cex.names=0.5, main=paste("Barplot of", names(data)[k]))
+        png(filename=paste(names(data)[k],"_barplot", niv, ".png",sep=""), width=800, height=800)
+        barplot(table(s), las=3, cex.names=1, main=paste("Barplot of", names(data)[k]))
+        dev.off()
       }#endifelse
     }#end for niv       
-  }#end for k
+    setwd(file.path(".."))
+    }#end for k
 }#end plot conditional table      

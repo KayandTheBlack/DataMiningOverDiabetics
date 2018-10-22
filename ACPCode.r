@@ -115,7 +115,7 @@ eje2<-2
 eje3<-3
 png(filename="ACP/Individual1.png", width=1920, height=1080,units="px")
 plot(Psi[,eje1],Psi[,eje2])
-text(Psi[,eje1],Psi[,eje2],labels=iden, cex=0.5)
+text(Psi[,eje1],Psi[,eje2],labels=iden, cex=1) # vvv changed cex from 0.5 vvv
 axis(side=1, pos= 0, labels = F, col="cyan")
 axis(side=3, pos= 0, labels = F, col="cyan")
 axis(side=2, pos= 0, labels = F, col="cyan")
@@ -123,7 +123,7 @@ axis(side=4, pos= 0, labels = F, col="cyan")
 dev.off()
 png(filename="ACP/Individual2.png", width=1920, height=1080,units="px")
 plot(Psi[,eje1],Psi[,eje3])
-text(Psi[,eje1],Psi[,eje3],labels=iden, cex=0.5)
+text(Psi[,eje1],Psi[,eje3],labels=iden, cex=1)
 axis(side=1, pos= 0, labels = F, col="cyan")
 axis(side=3, pos= 0, labels = F, col="cyan")
 axis(side=2, pos= 0, labels = F, col="cyan")
@@ -131,7 +131,7 @@ axis(side=4, pos= 0, labels = F, col="cyan")
 dev.off()
 png(filename="ACP/Individual3.png", width=1920, height=1080,units="px")
 plot(Psi[,eje2],Psi[,eje3])
-text(Psi[,eje2],Psi[,eje3],labels=iden, cex=0.5)
+text(Psi[,eje2],Psi[,eje3],labels=iden, cex=1)
 axis(side=1, pos= 0, labels = F, col="cyan")
 axis(side=3, pos= 0, labels = F, col="cyan")
 axis(side=2, pos= 0, labels = F, col="cyan")
@@ -144,6 +144,7 @@ Phi = cor(dcon,Psi)
 
 
 plot.with.zooms <- function(minx,maxx,miny,maxy, axis1, axis2){
+  globalCEX = 2.5
   X<-Phi[,axis1]
   Y<-Phi[,axis2]
   #all qualitative together with zooms
@@ -154,7 +155,7 @@ plot.with.zooms <- function(minx,maxx,miny,maxy, axis1, axis2){
   axis(side=4, pos= 0, labels = F, col="cyan")
   
   arrows(ze, ze, X, Y, length = 0.07,col="blue")
-  text(X,Y,labels=etiq,col="darkblue", cex=0.7)
+  text(X,Y,labels=etiq,col="darkblue", cex=globalCEX) #changed cex from 0.7
   
   #nominal qualitative variables
   dcat<-c(4,5,12,13,20,21,22,24,25,26,27,28,29,30)
@@ -167,7 +168,7 @@ plot.with.zooms <- function(minx,maxx,miny,maxy, axis1, axis2){
     fdic1 = tapply(Psi[,axis1],dd[,k],mean)
     fdic2 = tapply(Psi[,axis2],dd[,k],mean) 
     
-    text(fdic1,fdic2,labels=levels(dd[,k]),col=seguentColor, cex=0.6)
+    text(fdic1,fdic2,labels=levels(dd[,k]),col=seguentColor, cex=globalCEX) #changed cex from 0.6
     c<-c+1
   }
   # ordinal
@@ -183,12 +184,12 @@ plot.with.zooms <- function(minx,maxx,miny,maxy, axis1, axis2){
     #points(fdic1,fdic2,pch=16,col=seguentColor, labels=levels(dd[,k]))
     #connect modalities of qualitative variables
     lines(fdic1,fdic2,pch=16,col=seguentColor)
-    text(fdic1,fdic2,labels=levels(dd[,k]),col=seguentColor, cex=0.6)
+    text(fdic1,fdic2,labels=levels(dd[,k]),col=seguentColor, cex=globalCEX) #changed cex from 0.6
     c<-c+1
     col<-col+1
   }
-  legend("bottomleft",names(dd)[dcat],pch=1,col=colors, cex=0.6)
-  legend("bottomright",names(dd)[dordi],pch=1,col=colors[1:length(dordi)], cex=0.6)
+  legend("bottomleft",names(dd)[dcat],pch=3.25,col=colors, cex=globalCEX) #vvv changed cex from 0.6, pch from 1
+  legend("bottomright",names(dd)[dordi],pch=3.25,col=colors[1:length(dordi)], cex=globalCEX) 
   
 }
 

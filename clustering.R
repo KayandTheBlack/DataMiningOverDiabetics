@@ -1,4 +1,4 @@
-base_path <- "C:/Users/danie/Documents/MD/diab/DataMiningOverDiabetics"
+base_path <- "~/Documents/DataMiningOverDiabetics/"
 setwd(file.path(base_path))
 diabetic_data <- read.csv("processed_data.csv", na.strings = c("?"))
 
@@ -11,7 +11,7 @@ attach(diabetic_data)
 #hierarchical clustering
 
 library(cluster)
-install.packages("fpc")
+#install.packages("fpc")
 library(fpc)
 
 #dissimilarity matrix
@@ -42,6 +42,8 @@ c1 <- cutree(h1,n_clusters)
 plot(h1, labels = FALSE)
 rect.hclust(h1, k = n_clusters)
 
+#insert again the response variable
+diabetic_data$cluster = c1
 
 dcon <- data.frame (adm_type_id,disch_id,adm_source_id,time_in_hpt,n_lab_proc,n_proc,n_med,n_outp,n_emerg,n_inp,n_diag)
 pairs(dcon[,1:7], col=c1)

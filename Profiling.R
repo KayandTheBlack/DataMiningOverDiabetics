@@ -10,7 +10,7 @@ attach(dd)
 #Dictamen    <- as.factor(Dictamen)
 #levels(Dictamen) <- c(NA, "positiu","negatiu")
 
-actives<-c(4:11,13:28,30)
+actives<-c(4:11,13:30)
 
 #Calcula els valor test de la variable Xnum per totes les modalitats del factor P
 ValorTestXnum <- function(Xnum,P){
@@ -66,12 +66,12 @@ for(k in 1:K){
   if (is.numeric(dades[,k])){ 
     print(paste("Anàlisi per classes de la Variable:", names(dades)[k]))
     
-    png(filename=paste(names(diabetic_data)[k],"_Boxplot",".png",sep=""), width=800, height=800)
+    png(filename=paste(names(dades)[k],"_Boxplot",".png",sep=""), width=800, height=800)
     boxplot(dades[,k]~P, main=paste("Boxplot of", names(dades)[k], "vs", nameP ), horizontal=TRUE, cex=1.2)
     dev.off()
     
     
-    png(filename=paste(names(diabetic_data)[k],"_Barplot",".png",sep=""), width=800, height=800)
+    png(filename=paste(names(dades)[k],"_Barplot",".png",sep=""), width=800, height=800)
     barplot(tapply(dades[[k]], P, mean),main=paste("Means of", names(dades)[k], "by", nameP ))
     
     abline(h=mean(dades[[k]]))
@@ -106,7 +106,7 @@ for(k in 1:K){
     for(c in 1:length(levels(dades[,k]))){lines(colperc[,c],col=paleta[c]) }
     
     #with legend
-    png(filename=paste(names(diabetic_data)[k],"_pos&neg",".png",sep=""), width=800, height=800)
+    png(filename=paste(names(dades)[k],"_pos&neg",".png",sep=""), width=800, height=800)
     plot(marg,type="l",ylim=c(0,1),main=paste("Prop. of pos & neg by",names(dades)[k]))
     paleta<-rainbow(length(levels(dades[,k])))
     for(c in 1:length(levels(dades[,k]))){lines(colperc[,c],col=paleta[c]) }
@@ -120,7 +120,7 @@ for(k in 1:K){
     for(c in 1:length(levels(dades[,k]))){lines(rowperc[,c],col=paleta[c]) }
     
     #with legend
-    png(filename=paste(names(diabetic_data)[k],"_pos&negCondClasse",".png",sep=""), width=800, height=800)
+    png(filename=paste(names(dades)[k],"_pos&negCondClasse",".png",sep=""), width=800, height=800)
     plot(marg,type="n",ylim=c(0,1),main=paste("Prop. of pos & neg by",names(dades)[k]))
     paleta<-rainbow(length(levels(dades[,k])))
     for(c in 1:length(levels(dades[,k]))){lines(rowperc[,c],col=paleta[c]) }
@@ -135,7 +135,7 @@ for(k in 1:K){
     for(c in 1:length(levels(as.factor(P)))){lines(rowperc[c,],col=paleta[c]) }
     
     #with legend
-    png(filename=paste(names(diabetic_data)[k],"_pos&negGirat",".png",sep=""), width=800, height=800)
+    png(filename=paste(names(dades)[k],"_pos&negGirat",".png",sep=""), width=800, height=800)
     plot(marg,type="l",ylim=c(0,1),main=paste("Prop. of pos & neg by",names(dades)[k]))
     for(c in 1:length(levels(as.factor(P)))){lines(rowperc[c,],col=paleta[c])}
     legend("topright", levels(as.factor(P)), col=paleta, lty=2, cex=1.2)
@@ -147,7 +147,7 @@ for(k in 1:K){
     for(c in 1:length(levels(as.factor(P)))){lines(colperc[c,],col=paleta[c]) }
     
     #with legend
-    png(filename=paste(names(diabetic_data)[k],"_pos&negCondColumn",".png",sep=""), width=800, height=800)
+    png(filename=paste(names(dades)[k],"_pos&negCondColumn",".png",sep=""), width=800, height=800)
     plot(marg,type="n",ylim=c(0,1),main=paste("Prop. of pos & neg by",names(dades)[k]))
     for(c in 1:length(levels(as.factor(P)))){lines(colperc[c,],col=paleta[c])}
     legend("topright", levels(as.factor(P)), col=paleta, lty=2, cex=1.2)
@@ -164,7 +164,7 @@ for(k in 1:K){
     paleta<-rainbow(length(levels(dades[,k])))
     barplot(table(dades[,k], as.factor(P)), beside=FALSE,col=paleta )
     
-    png(filename=paste(names(diabetic_data)[k],"_barplotApilades",".png",sep=""), width=800, height=800)
+    png(filename=paste(names(dades)[k],"_barplotApilades",".png",sep=""), width=800, height=800)
     barplot(table(dades[,k], as.factor(P)), beside=FALSE,col=paleta )
     legend("topright",levels(as.factor(dades[,k])),pch=1,cex=1.2, col=paleta)
     dev.off()
@@ -172,7 +172,7 @@ for(k in 1:K){
     #diagrames de barres adosades
     barplot(table(dades[,k], as.factor(P)), beside=TRUE,col=paleta )
     
-    png(filename=paste(names(diabetic_data)[k],"_barplotAdosades",".png",sep=""), width=800, height=800)
+    png(filename=paste(names(dades)[k],"_barplotAdosades",".png",sep=""), width=800, height=800)
     barplot(table(dades[,k], as.factor(P)), beside=TRUE,col=paleta)
     legend("topright",levels(as.factor(dades[,k])),pch=1,cex=1.2, col=paleta)
     dev.off()

@@ -1,4 +1,4 @@
-base_path <- "~/Documents/DataMiningOverDiabetics/"
+base_path <- "C:/Users/danie/Documents/MD/diab/DataMiningOverDiabetics"
 setwd(file.path(base_path))
 diabetic_data <- read.csv("processed_data.csv", na.strings = c("?"))
 
@@ -43,22 +43,30 @@ plot(h1, labels = FALSE)
 rect.hclust(h1, k = n_clusters)
 
 #insert again the response variable
-diabetic_data$cluster = c1
 
-dcon <- data.frame (adm_type_id,disch_id,adm_source_id,time_in_hpt,n_lab_proc,n_proc,n_med,n_outp,n_emerg,n_inp,n_diag)
-pairs(dcon[,1:7], col=c1)
 
-dcon <- data.frame (race, gender, age, weight, adm_type_id, disch_id, adm_source_id, time_in_hpt, specialty, diabetesMed, readmitted, other_meds)
-pairs(dcon[,1:12], col=c1)
+dcon <- data.frame (race, gender, age, weight, adm_type_id, disch_id, adm_source_id, time_in_hpt, specialty, n_lab_proc, n_proc, n_med, n_outp, n_emerg, n_inp, diag_1, diag_2, diag_3, A1Cresult, metformin, insulin, change, diabetesMed, readmitted, other_meds)
+png("all_vars_pairs.png", width=20, height=20, units="in", res=500)
+pairs(dcon[,1:25], col=c1)
+dev.off()
 
-dcon_pot <- data.frame (race, age, weight, adm_type_id, disch_id, n_lab_proc, n_med, readmitted, time_in_hpt, diabetesMed)
-pairs(dcon_pot[,1:10], col=c1)
+dcon <- data.frame (age, n_lab_proc, n_med, time_in_hpt, n_outp, disch_id)
+png("some_vars_pairs2.png", width=20, height=20, units="in", res=500)
+pairs(dcon[,1:6], col=c1)
+dev.off()
+
 
 plot(n_med, n_lab_proc,col=c1,main="Clustering of credit data in 3 classes")
 plot(n_med, age,col=c1,main="Clustering of credit data in 3 classes")
 plot(n_med, time_in_hpt,col=c1,main="Clustering of credit data in 3 classes")
 plot(weight, adm_type_id,col=c1,main="Clustering of credit data in 3 classes")
 plot(n_med, disch_id,col=c1,main="Clustering of credit data in 3 classes")
+
+#trying to display the discrete variables as continuous to avoid problems
+for (row in 1:nrow(diabetic_data)) {
+  diabetic_data[row, "disch_id"] <- diabetic_data[row, "disch_id"] + runif(1, -1.0, 1.0)
+  #disch_id <- disch_id + runif(1, -1.0, 1.0)
+}
 
 
 
